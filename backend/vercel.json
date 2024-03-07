@@ -1,12 +1,3 @@
 {
-    "version": 2,
-    "builds": [
-      { "src": "server.js", "use": "@vercel/node" }
-    ],
-    "routes": [
-      { "src": "/api/register", "dest": "/api/register" },
-      { "src": "/api/registrations", "dest": "/api/registrations" },
-      { "src": "/", "dest": "/server.js" }
-    ]
-  }
-  
+    "rewrites":[{"source": "/(.*)", "destination": "/"}]
+}
