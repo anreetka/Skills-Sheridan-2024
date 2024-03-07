@@ -18,7 +18,7 @@ const List = () => {
     }, []);
 
     return (
-        <div>
+        <div className="container">
             <h1 className='text-center'>Registration List</h1>
             <ul>
                 {registrations.map((registration, index) => (

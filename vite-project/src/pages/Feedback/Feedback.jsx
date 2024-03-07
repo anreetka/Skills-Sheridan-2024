@@ -1,15 +1,29 @@
 import React, { useState } from "react";
 
 const Feedback = () => {
+
+    const events =["Event 1", "Event 2", "Event 3"];
+    const[selectedEvent, setSelectedEvent] = useState("");
     const [feedback, setFeedback] = useState("");
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Handle feedback submission
-        console.log("Feedback submitted:", feedback);
-        // You can submit the feedback data to the backend or perform further actions here
-        // Reset the feedback state after submission
+
+        const response = await fetch('http://localhost:3001/api/submit-feedback', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                selectedEvent,
+                feedback,
+            }),
+        });
+
+        console.log(response.body);
+
         setFeedback("");
+        setSelectedEvent("");
     };
 
     return (
@@ -20,7 +34,16 @@ const Feedback = () => {
                     <div className="card">
                         <div className="card-body">
                             <h5 className="card-title text-center mb-4" style={{fontSize:'20px'}}>Thank you for attending Skills Sheridan this year. <br/>We value your feedback to improve our event for next time.</h5>
-                            <form onSubmit={handleSubmit}>
+                            <form action="http://localhost:3001/api/submit-feedback" method="POST" onSubmit={handleSubmit}>
+                                <div className="form-group">
+                                    <label htmlFor="event" className="font-weight-bold" style={{fontSize:'20px'}}>Event Name:</label>
+                                    <select className="form-control" id="event" name="selectedEvent" value={selectedEvent} onChange={(e)=> setSelectedEvent(e.target.value)}>
+                                        <option value="">Select Event</option>
+                                        {events.map((event, index)=>(
+                                            <option value={event} key={index}>{event}</option>
+                                        ))}
+                                    </select>
+                                </div>
                                 <div className="form-group">
                                     <label htmlFor="feedback" className="font-weight-bold" style={{fontSize:'20px'}}>Your Feedback:</label>
                                     <textarea

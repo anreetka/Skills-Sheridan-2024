@@ -10,7 +10,7 @@ const RegistrationPage = () => {
 
     const events = ["Event 1", "Event 2", "Event 3"];
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!studentNumber || studentNumber.length !== 9) {
             setErrorMessage("Please enter a valid student number.");
@@ -37,6 +37,29 @@ const RegistrationPage = () => {
         // If all validations pass, proceed with registration
         console.log("Registration successful!");
 
+        console.log({
+            studentNumber,
+            email,
+            selectedEvent
+        });
+
+        const response = await fetch('http://localhost:3001/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                studentNumber,
+                email,
+                selectedEvent
+            }),
+    });
+
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+
         setStudentNumber("");
         setEmail("");
         setSelectedEvent("");
@@ -48,18 +71,18 @@ const RegistrationPage = () => {
             <h2 className="text-center mb-4" style={{ fontSize: '2.5rem' }}>Event Registration</h2>
             <div className="row justify-content-center">
                 <div className="col-md-6">
-                    <form action="http://localhost:3001/api/register" method="POST" onSubmit={handleSubmit}>
+                    <form action='http://localhost:3001/api/register' method="POST" onSubmit={handleSubmit}>
                         <div className="form-group">
                             <label htmlFor="studentNumber">Student Number:</label>
-                            <input type="text" className="form-control" id="studentNumber" value={studentNumber} onChange={(e) => setStudentNumber(e.target.value)} />
+                            <input type="text" className="form-control" name='studentNumber' id="studentNumber" value={studentNumber} onChange={(e) => setStudentNumber(e.target.value)} />
                         </div>
                         <div className="form-group">
                             <label htmlFor="email">Sheridan College Email:</label>
-                            <input type="email" className="form-control" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                            <input type="email" className="form-control" name='email' id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                         </div>
                         <div className="form-group">
                             <label htmlFor="event">Select Event:</label>
-                            <select className="form-control" id="event" value={selectedEvent} onChange={(e) => setSelectedEvent(e.target.value)}>
+                            <select className="form-control" id="event" name='selectedEvent' value={selectedEvent} onChange={(e) => setSelectedEvent(e.target.value)}>
                                 <option value="">Select Event</option>
                                 {events.map((event, index) => (
                                     <option key={index} value={event}>{event}</option>
