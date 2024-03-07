@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express')
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -10,7 +11,7 @@ console.log('Before connecting to MongoDB');
 async function connectToMongoDB()
 {
   try{
-    await mongoose.connect('mongodb://localhost:27017/SkillsSheridanDB',{
+    await mongoose.connect(process.env.MONGO_URL,{
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
